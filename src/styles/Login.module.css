@@ -1,0 +1,4 @@
+.login{
+    clip-path: polygon(0 0, 100% 0%, 100% 100%, 19% 100%);    background-color: red;
+    height: 100vh;
+}

@@ -1,10 +1,26 @@
+import axios from 'axios';
 import Head from 'next/head'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
+import Navbar from '../layouts/Nav'
 
+import { Swiper, SwiperSlide } from 'swiper/react';
+
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+
+// import './styles.css';
+
+// import required modules
+import { Pagination, Navigation } from 'swiper/modules';
+import FeatureCategory from '@/components/FeatureCategory';
+import { Container } from '@mui/material';
 const inter = Inter({ subsets: ['latin'] })
 
-export default function Home() {
+ function Home({category}) {
+  console.log(category[0].name , 'jj')
   return (
     <>
       <Head>
@@ -13,9 +29,51 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={`${styles.main} ${inter.className}`}>
-     
-      </main>
+      {/* <main className={`${styles.main} ${inter.className}`}> */}
+      <>
+      <Navbar> </Navbar>
+      <Container maxWidth="xl">
+     <Swiper
+        slidesPerView={1}
+        spaceBetween={30}
+        loop={true}
+        pagination={{
+          clickable: true,
+        }}
+        navigation={true}
+        modules={[Pagination, Navigation]}
+        className={styles.mySwiper}
+      >
+        <SwiperSlide>Slide 1sss</SwiperSlide>
+        <SwiperSlide>Slide 2</SwiperSlide>
+        <SwiperSlide>Slide 3</SwiperSlide>
+        <SwiperSlide>Slide 4</SwiperSlide>
+       
+      </Swiper>
+      <FeatureCategory category={category}/>
+      </Container>
+      </>
+      {/* </main> */}
     </>
   )
 }
+export async function getServerSideProps() {
+  try {
+    const response = await axios.get('https://prohop-express.herokuapp.com/api/products/category/all');
+    const category = response.data.categories;
+
+    return {
+      props: {
+        category,
+      },
+    };
+  } catch (error) {
+    console.error('Error fetching category:', error);
+    return {
+      props: {
+        category: [],
+      },
+    };
+  }
+}
+export default Home
